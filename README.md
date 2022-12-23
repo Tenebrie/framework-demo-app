@@ -1,11 +1,36 @@
+# Demo-app documentation
+> This section is work-in-progress.
+
+The framework is not finished, but this app demonstrates the core features that will be available.
+
+## Exploration guide
+
+- After pulling the repo, use `yarn` to install dependencies.
+- Use `yarn start` to boot up a local development environment.
+- Start with `src/routers/AuthRouter.ts` file as example.
+- Feel free to modify the code to check the results, or use premade `src/routers/SandboxRouter.ts` for experimentation.
+- Send requests to `localhost:3000/{yourPath}` to see the responses.
+- Visit `localhost:3000/api-json` to get an OpenAPI spec of your API.
+- To add new routers, do not forget to register them in `src/index.ts`.
+
 # Framework documentation
 > This section is work-in-progress.
+
+As of right now, the unnamed framework lives in `src/framework` folder, but will be a separate package later. This documentation will be improved and moved to a separate repository at a later date.
+
+## Feature Overview
+
+- React hooks inspired backend REST API
+- Fully type-safe definitions for path and query params, request body and response
+- Minimal boilerplate code
+- Out-of-the-box OpenAPI 3.0.3 spec generation
 
 ## Planned features
 
 - Proper support for router-level middleware
 - `useAuthentication` hook for native auth
 - `useCookies` hook to work with cookies
+- `useHeaders` hook to work with request header
 - Support for thrown errors in OpenApi engine
 - Support for binary data responses
 - Support for multipart form data
@@ -33,7 +58,6 @@ Validators are run for every parameter received from the client.
 const query = useRequestQuery(ctx, {
     name: RequiredParam(StringValidator),
     fooBar: OptionalParam<{ foo: string; bar: string }>({
-        prevalidate: (v) => v.length > 5,
         rehydrate: (v) => JSON.parse(v),
         validate: (v) => !!v.foo && !!v.bar
     }),
