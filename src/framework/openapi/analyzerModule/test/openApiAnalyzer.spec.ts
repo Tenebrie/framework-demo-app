@@ -189,6 +189,12 @@ describe('OpenApi Analyzer', () => {
 				])
 				expect(endpoint.params[1].optional).toEqual(false)
 			})
+
+			it('parses params with destructuring correctly', () => {
+				const endpoint = analyzeEndpointById('39669151-c529-4bcd-86a5-a10de7834104')
+
+				expect(endpoint.params).toEqual([{ identifier: 'foo', optional: false, signature: 'string' }])
+			})
 		})
 
 		describe('useRequestQuery', () => {
@@ -208,8 +214,6 @@ describe('OpenApi Analyzer', () => {
 
 			it('parses enum union query type correctly', () => {
 				const endpoint = analyzeEndpointById('7c51de80-1ff1-4511-b0d3-8a75c296c507')
-
-				console.log(JSON.stringify(endpoint.query[0].signature))
 
 				expect(endpoint.query[0].signature).toEqual([
 					{

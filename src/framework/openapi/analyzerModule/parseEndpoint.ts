@@ -119,7 +119,7 @@ const parseApiDocumentation = (node: Node<ts.Node>) => {
 	if (!hookNode) {
 		return []
 	}
-	const paramNode = hookNode.getParent()!.getFirstDescendantByKind(SyntaxKind.SyntaxList)!
+	const paramNode = hookNode.getFirstChildByKind(SyntaxKind.SyntaxList)!
 	const valueNode = findNodeImplementation(paramNode.getLastChild()!)
 
 	if (!valueNode.isKind(SyntaxKind.ObjectLiteralExpression)) {
@@ -136,7 +136,7 @@ const parseRequestParams = (node: Node<ts.Node>, endpointPath: string): Endpoint
 		return []
 	}
 
-	const paramNode = hookNode.getParent()!.getFirstDescendantByKind(SyntaxKind.SyntaxList)!
+	const paramNode = hookNode.getFirstChildByKind(SyntaxKind.SyntaxList)!
 	const valueNode = findNodeImplementation(paramNode.getLastChild()!)
 
 	if (!valueNode.isKind(SyntaxKind.ObjectLiteralExpression)) {
@@ -166,7 +166,7 @@ const parseRequestRawBody = (node: Node<ts.Node>): NonNullable<EndpointData['raw
 	if (!hookNode) {
 		return null
 	}
-	const paramNode = hookNode.getParent()!.getFirstDescendantByKind(SyntaxKind.SyntaxList)!
+	const paramNode = hookNode.getFirstChildByKind(SyntaxKind.SyntaxList)!
 	const valueNode = findNodeImplementation(paramNode.getLastChild()!)
 
 	return {

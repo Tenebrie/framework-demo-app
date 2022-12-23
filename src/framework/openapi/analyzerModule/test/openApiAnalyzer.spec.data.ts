@@ -284,3 +284,12 @@ router.get('/test/724a56ef-32f9-4c59-b22c-60bd33e45242', (ctx) => {
 		}),
 	})
 })
+
+router.get('/test/39669151-c529-4bcd-86a5-a10de7834104/:foo', (ctx) => {
+	const { foo } = useRequestParams(ctx, {
+		foo: RequiredParam({
+			rehydrate: (v) => v,
+		}),
+	})
+	foo
+})

@@ -2,7 +2,7 @@ import { Router } from '../framework'
 
 const router = new Router()
 
-router.get('/sandbox', () => {
+router.get('/sandbox/:test', () => {
 	return {
 		greeting: 'hello world',
 	}
