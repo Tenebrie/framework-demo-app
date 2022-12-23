@@ -1,6 +1,16 @@
 # Framework documentation
 > This section is work-in-progress.
 
+## Planned features
+
+- Proper support for router-level middleware
+- `useAuthentication` hook for native auth
+- `useCookies` hook to work with cookies
+- Support for thrown errors in OpenApi engine
+- Support for binary data responses
+- Support for multipart form data
+- Custom descriptions in OpenApi engine output
+
 # Hooks
 > This section is work-in-progress.
 
