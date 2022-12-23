@@ -31,10 +31,15 @@ As of right now, the unnamed framework lives in `src/framework` folder, but will
 - `useAuthentication` hook for native auth
 - `useCookies` hook to work with cookies
 - `useHeaders` hook to work with request header
+- Ability to output spec as file
+- CLI-level spec generation function
 - Support for thrown errors in OpenApi engine
 - Support for binary data responses
 - Support for multipart form data
 - Custom descriptions in OpenApi engine output
+
+## Known issues
+- `null` type may appear in spec 
 
 # Hooks
 > This section is work-in-progress.

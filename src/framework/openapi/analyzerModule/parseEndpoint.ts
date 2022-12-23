@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { debugNode } from '@src/framework/utils/printers'
 import { SyntaxKind, ts, Node } from 'ts-morph'
 import { EndpointData } from '../types'
 import {
@@ -182,7 +183,7 @@ const parseRequestObjectInput = (
 	if (!hookNode) {
 		return []
 	}
-	const paramNode = hookNode.getParent()!.getFirstDescendantByKind(SyntaxKind.SyntaxList)!
+	const paramNode = hookNode.getFirstChildByKind(SyntaxKind.SyntaxList)!
 	const valueNode = findNodeImplementation(paramNode.getLastChild()!)
 
 	if (!valueNode.isKind(SyntaxKind.ObjectLiteralExpression)) {
