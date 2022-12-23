@@ -3,6 +3,7 @@ import Koa from 'koa'
 import { AuthRouter } from './routers/AuthRouter'
 import * as bodyParser from 'koa-bodyparser'
 import { HttpErrorHandler, initOpenApiEngine, useApiHeader } from './framework'
+import { SandboxRouter } from './routers/SandboxRouter'
 
 const app = new Koa()
 
@@ -31,10 +32,12 @@ app
 	)
 	.use(AuthRouter.routes())
 	.use(AuthRouter.allowedMethods())
+	.use(SandboxRouter.routes())
+	.use(SandboxRouter.allowedMethods())
 	.use(
 		initOpenApiEngine({
 			tsconfigPath: './tsconfig.json',
-			sourceFilePaths: ['./src/routers/AuthRouter.ts'],
+			sourceFilePaths: ['./src/routers/AuthRouter.ts', './src/routers/SandboxRouter.ts'],
 		})
 	)
 
