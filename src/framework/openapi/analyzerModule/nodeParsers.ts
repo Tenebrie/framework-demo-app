@@ -345,11 +345,31 @@ export const getProperTypeShape = (
 		return 'boolean'
 	}
 
-	if (type.isString() || type.isStringLiteral() || type.isTemplateLiteral()) {
+	if (type.isStringLiteral()) {
+		return [
+			{
+				role: 'literal_string' as const,
+				shape: String(type.getLiteralValue()!),
+				optional: false,
+			},
+		]
+	}
+
+	if (type.isNumberLiteral()) {
+		return [
+			{
+				role: 'literal_number' as const,
+				shape: String(type.getLiteralValue()!),
+				optional: false,
+			},
+		]
+	}
+
+	if (type.isString() || type.isTemplateLiteral()) {
 		return 'string'
 	}
 
-	if (type.isNumber() || type.isNumberLiteral()) {
+	if (type.isNumber()) {
 		return 'number'
 	}
 

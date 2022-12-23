@@ -21,7 +21,8 @@ describe('OpenApi Analyzer', () => {
 	describe('when analyzing a test data file', () => {
 		let analysisResult: ReturnType<typeof analyzeSourceFile>
 
-		const getEndpointById = (id: string) => {
+		const analyzeEndpointById = (id: string) => {
+			analysisResult = analyzeSourceFile(dataFile, [`/test/${id}`])
 			const endpoint = analysisResult.find((endpoint) => endpoint.path.startsWith(`/test/${id}`))
 			if (!endpoint) {
 				throw new Error(`No endpoint with id ${id} found!`)
@@ -29,13 +30,9 @@ describe('OpenApi Analyzer', () => {
 			return endpoint
 		}
 
-		beforeAll(() => {
-			analysisResult = analyzeSourceFile(dataFile)
-		})
-
 		describe('useApiEndpoint', () => {
 			it('parses useApiEndpoint values correctly', () => {
-				const endpoint = getEndpointById('908c3e74-cf67-4ec7-a281-66a79f95d44d')
+				const endpoint = analyzeEndpointById('908c3e74-cf67-4ec7-a281-66a79f95d44d')
 
 				expect(endpoint.name).toEqual('Test endpoint name')
 				expect(endpoint.summary).toEqual('Test endpoint summary')
@@ -45,7 +42,7 @@ describe('OpenApi Analyzer', () => {
 
 		describe('useRequestParams', () => {
 			it('parses inline useRequestParams validators correctly', () => {
-				const endpoint = getEndpointById('bf6147f2-a1dc-4cc2-8327-e6f041f828bf')
+				const endpoint = analyzeEndpointById('bf6147f2-a1dc-4cc2-8327-e6f041f828bf')
 
 				expect(endpoint.params[0].identifier).toEqual('firstParam')
 				expect(endpoint.params[0].signature).toEqual('string')
@@ -59,7 +56,7 @@ describe('OpenApi Analyzer', () => {
 			})
 
 			it('parses built-in useRequestParams validators correctly', () => {
-				const endpoint = getEndpointById('ef25ef5e-0f8f-4732-bf59-8825f94a5287')
+				const endpoint = analyzeEndpointById('ef25ef5e-0f8f-4732-bf59-8825f94a5287')
 
 				expect(endpoint.params[0].identifier).toEqual('firstParam')
 				expect(endpoint.params[0].signature).toEqual('string')
@@ -73,7 +70,7 @@ describe('OpenApi Analyzer', () => {
 			})
 
 			it('parses complex useRequestParams validator correctly', () => {
-				const endpoint = getEndpointById('5ab5dd0d-b241-4378-bea1-a2dd696d699a')
+				const endpoint = analyzeEndpointById('5ab5dd0d-b241-4378-bea1-a2dd696d699a')
 
 				expect(endpoint.params[0].identifier).toEqual('firstParam')
 				expect(endpoint.params[0].signature).toEqual([
@@ -110,7 +107,7 @@ describe('OpenApi Analyzer', () => {
 			})
 
 			it('parses useRequestParams validator with optional types correctly', () => {
-				const endpoint = getEndpointById('209df2a1-55f9-4859-bc31-3277547c7d88')
+				const endpoint = analyzeEndpointById('209df2a1-55f9-4859-bc31-3277547c7d88')
 
 				expect(endpoint.params[0].identifier).toEqual('firstParam')
 				expect(endpoint.params[0].signature).toEqual([
@@ -135,7 +132,7 @@ describe('OpenApi Analyzer', () => {
 			})
 
 			it('parses useRequestParams validator with union types correctly', () => {
-				const endpoint = getEndpointById('89d961f1-7d36-4271-8bd3-665ee0992590')
+				const endpoint = analyzeEndpointById('89d961f1-7d36-4271-8bd3-665ee0992590')
 
 				expect(endpoint.params[0].identifier).toEqual('firstParam')
 				expect(endpoint.params[0].signature).toEqual([
@@ -196,7 +193,7 @@ describe('OpenApi Analyzer', () => {
 
 		describe('useRequestQuery', () => {
 			it('parses inline useRequestQuery validators correctly', () => {
-				const endpoint = getEndpointById('f89310d9-25ac-4005-93e4-614179d3bbd4')
+				const endpoint = analyzeEndpointById('f89310d9-25ac-4005-93e4-614179d3bbd4')
 
 				expect(endpoint.query[0].identifier).toEqual('firstParam')
 				expect(endpoint.query[0].signature).toEqual('string')
@@ -208,11 +205,51 @@ describe('OpenApi Analyzer', () => {
 				expect(endpoint.query[2].signature).toEqual('number')
 				expect(endpoint.query[2].optional).toEqual(true)
 			})
+
+			it('parses enum union query type correctly', () => {
+				const endpoint = analyzeEndpointById('7c51de80-1ff1-4511-b0d3-8a75c296c507')
+
+				console.log(JSON.stringify(endpoint.query[0].signature))
+
+				expect(endpoint.query[0].signature).toEqual([
+					{
+						role: 'union',
+						shape: [
+							{
+								role: 'union_entry',
+								shape: [{ role: 'literal_string', shape: 'dec', optional: false }],
+								optional: false,
+							},
+							{
+								role: 'union_entry',
+								shape: [{ role: 'literal_string', shape: 'hex', optional: false }],
+								optional: false,
+							},
+							{
+								role: 'union_entry',
+								shape: [{ role: 'literal_string', shape: 'bin', optional: false }],
+								optional: false,
+							},
+						],
+						optional: false,
+					},
+				])
+				expect(endpoint.responses.length).toEqual(1)
+			})
+
+			it('parses enum query type correctly', () => {
+				const endpoint = analyzeEndpointById('724a56ef-32f9-4c59-b22c-60bd33e45242')
+
+				expect(endpoint.query[0].signature).toEqual([
+					{ role: 'literal_string', shape: 'hello world', optional: false },
+				])
+				expect(endpoint.responses.length).toEqual(1)
+			})
 		})
 
 		describe('useRequestRawBody', () => {
 			it('parses inline useRequestRawBody validator correctly', () => {
-				const endpoint = getEndpointById('6040cd01-a0c6-4b70-9901-b647f19b19a7')
+				const endpoint = analyzeEndpointById('6040cd01-a0c6-4b70-9901-b647f19b19a7')
 
 				const body = endpoint.rawBody
 				if (!body) {
@@ -236,7 +273,7 @@ describe('OpenApi Analyzer', () => {
 			})
 
 			it('parses inline useRequestRawBody validator correctly with alternative typing', () => {
-				const endpoint = getEndpointById('f3754325-6d9c-42b6-becf-4a9e72bd2c4e')
+				const endpoint = analyzeEndpointById('f3754325-6d9c-42b6-becf-4a9e72bd2c4e')
 
 				const body = endpoint.rawBody
 				if (!body) {
@@ -260,7 +297,7 @@ describe('OpenApi Analyzer', () => {
 			})
 
 			it('parses optional useRequestRawBody validator correctly', () => {
-				const endpoint = getEndpointById('1ab973ff-9937-4e2d-b432-ff43a9df42cb')
+				const endpoint = analyzeEndpointById('1ab973ff-9937-4e2d-b432-ff43a9df42cb')
 
 				const body = endpoint.rawBody
 				if (!body) {
@@ -284,7 +321,7 @@ describe('OpenApi Analyzer', () => {
 			})
 
 			it('parses optional built-in useRequestRawBody validator correctly', () => {
-				const endpoint = getEndpointById('f74f6003-2aba-4f8c-855e-c0149f4217b7')
+				const endpoint = analyzeEndpointById('f74f6003-2aba-4f8c-855e-c0149f4217b7')
 
 				const body = endpoint.rawBody
 				if (!body) {
@@ -297,7 +334,7 @@ describe('OpenApi Analyzer', () => {
 
 		describe('useRequestObjectBody', () => {
 			it('parses inline useRequestObjectBody validators correctly', () => {
-				const endpoint = getEndpointById('e8e5496b-11a0-41e3-a68d-f03d524e413c')
+				const endpoint = analyzeEndpointById('e8e5496b-11a0-41e3-a68d-f03d524e413c')
 
 				expect(endpoint.objectBody[0].identifier).toEqual('firstParam')
 				expect(endpoint.objectBody[0].signature).toEqual('string')
@@ -313,7 +350,7 @@ describe('OpenApi Analyzer', () => {
 
 		describe('useRequestJsonBody', () => {
 			it('parses inline useRequestJsonBody validators correctly', () => {
-				const endpoint = getEndpointById('7268be93-ce90-44b1-9a2f-8b286d7aae67')
+				const endpoint = analyzeEndpointById('7268be93-ce90-44b1-9a2f-8b286d7aae67')
 
 				expect(endpoint.objectBody[0].identifier).toEqual('firstParam')
 				expect(endpoint.objectBody[0].signature).toEqual('string')
@@ -329,7 +366,7 @@ describe('OpenApi Analyzer', () => {
 
 		describe('useRequestFormBody', () => {
 			it('parses inline useRequestFormBody validators correctly', () => {
-				const endpoint = getEndpointById('185c6075-a0f4-4607-af81-b51923f5866f')
+				const endpoint = analyzeEndpointById('185c6075-a0f4-4607-af81-b51923f5866f')
 
 				expect(endpoint.objectBody[0].identifier).toEqual('firstParam')
 				expect(endpoint.objectBody[0].signature).toEqual('string')
@@ -345,7 +382,7 @@ describe('OpenApi Analyzer', () => {
 
 		describe('endpoint return value', () => {
 			it('parses simple return value correctly', () => {
-				const endpoint = getEndpointById('e1bedf55-6d3a-4c01-9c66-6ec74cc66c3b')
+				const endpoint = analyzeEndpointById('e1bedf55-6d3a-4c01-9c66-6ec74cc66c3b')
 
 				expect(endpoint.responses[0].status).toEqual(200)
 				expect(endpoint.responses[0].signature).toEqual('string')
@@ -353,19 +390,19 @@ describe('OpenApi Analyzer', () => {
 			})
 
 			it('parses multiple return values correctly', () => {
-				const endpoint = getEndpointById('78ad5fba-f4e2-4924-b28a-23e39dd146f7')
+				const endpoint = analyzeEndpointById('78ad5fba-f4e2-4924-b28a-23e39dd146f7')
 
 				expect(endpoint.responses[0].status).toEqual(200)
-				expect(endpoint.responses[0].signature).toEqual('boolean')
+				expect(endpoint.responses[0].signature).toEqual('string')
 				expect(endpoint.responses[1].status).toEqual(200)
-				expect(endpoint.responses[1].signature).toEqual('string')
+				expect(endpoint.responses[1].signature).toEqual('number')
 				expect(endpoint.responses[2].status).toEqual(200)
-				expect(endpoint.responses[2].signature).toEqual('number')
+				expect(endpoint.responses[2].signature).toEqual('boolean')
 				expect(endpoint.responses.length).toEqual(3)
 			})
 
 			it('parses type inferred return value object correctly', () => {
-				const endpoint = getEndpointById('c542cb10-538c-44eb-8d13-5111e273ead0')
+				const endpoint = analyzeEndpointById('c542cb10-538c-44eb-8d13-5111e273ead0')
 
 				expect(endpoint.responses[0].status).toEqual(200)
 				expect(endpoint.responses[0].signature).toEqual([
@@ -386,7 +423,7 @@ describe('OpenApi Analyzer', () => {
 			})
 
 			it('parses return value object with optional values correctly', () => {
-				const endpoint = getEndpointById('03888127-6b97-42df-b429-87a6588ab2a4')
+				const endpoint = analyzeEndpointById('03888127-6b97-42df-b429-87a6588ab2a4')
 
 				expect(endpoint.responses[0].status).toEqual(200)
 				expect(endpoint.responses[0].signature).toEqual([
@@ -407,7 +444,7 @@ describe('OpenApi Analyzer', () => {
 			})
 
 			it('parses return value object with union values correctly', () => {
-				const endpoint = getEndpointById('b73347dc-c16f-4272-95b4-bf1716bf9c14')
+				const endpoint = analyzeEndpointById('b73347dc-c16f-4272-95b4-bf1716bf9c14')
 
 				expect(endpoint.responses[0].status).toEqual(200)
 				expect(endpoint.responses[0].signature).toEqual([
@@ -432,7 +469,7 @@ describe('OpenApi Analyzer', () => {
 			})
 
 			it('parses return value object with union values in async function correctly', () => {
-				const endpoint = getEndpointById('666b9ed1-62db-447a-80a7-8f35ec50ab02')
+				const endpoint = analyzeEndpointById('666b9ed1-62db-447a-80a7-8f35ec50ab02')
 
 				expect(endpoint.responses[0].status).toEqual(200)
 				expect(endpoint.responses[0].signature).toEqual([
@@ -447,7 +484,7 @@ describe('OpenApi Analyzer', () => {
 			})
 
 			it('parses return of query params correctly', () => {
-				const endpoint = getEndpointById('97bb5db8-1871-4c1d-998e-a724c04c5741')
+				const endpoint = analyzeEndpointById('97bb5db8-1871-4c1d-998e-a724c04c5741')
 
 				expect(endpoint.responses[0].status).toEqual(200)
 				expect(endpoint.responses[0].signature).toEqual([
@@ -474,7 +511,7 @@ describe('OpenApi Analyzer', () => {
 			})
 
 			it('parses return of union type query params correctly', () => {
-				const endpoint = getEndpointById('4188ebf2-eae6-4994-8732-c7f43d4da861')
+				const endpoint = analyzeEndpointById('4188ebf2-eae6-4994-8732-c7f43d4da861')
 
 				expect(endpoint.responses[0].status).toEqual(200)
 				expect(endpoint.responses[0].signature).toEqual([
@@ -510,7 +547,7 @@ describe('OpenApi Analyzer', () => {
 			})
 
 			it('parses return record type correctly', () => {
-				const endpoint = getEndpointById('32f18a25-2408-46cf-9519-f9a8d855bf84')
+				const endpoint = analyzeEndpointById('32f18a25-2408-46cf-9519-f9a8d855bf84')
 
 				expect(endpoint.responses[0].status).toEqual(200)
 				expect(endpoint.responses[0].signature).toEqual([
@@ -537,7 +574,7 @@ describe('OpenApi Analyzer', () => {
 			})
 
 			it('parses no-return endpoint correctly', () => {
-				const endpoint = getEndpointById('196f2937-e369-435f-b239-62eaacaa6fbd')
+				const endpoint = analyzeEndpointById('196f2937-e369-435f-b239-62eaacaa6fbd')
 
 				expect(endpoint.responses[0].status).toEqual(204)
 				expect(endpoint.responses[0].signature).toEqual('void')
@@ -545,7 +582,7 @@ describe('OpenApi Analyzer', () => {
 			})
 
 			it('parses circular dependency correctly', () => {
-				const endpoint = getEndpointById('33a0f888-396e-4c4d-b1d9-4cf6600ab88d')
+				const endpoint = analyzeEndpointById('33a0f888-396e-4c4d-b1d9-4cf6600ab88d')
 
 				expect(endpoint.responses[0].status).toEqual(200)
 				expect(endpoint.responses[0].signature).toEqual('string')
@@ -557,7 +594,7 @@ describe('OpenApi Analyzer', () => {
 			})
 
 			it('parses array return type correctly', () => {
-				const endpoint = getEndpointById('e3659429-1a05-4590-a5a6-dc80a30878e6')
+				const endpoint = analyzeEndpointById('e3659429-1a05-4590-a5a6-dc80a30878e6')
 
 				expect(endpoint.responses[0].status).toEqual(200)
 				expect(endpoint.responses[0].signature).toEqual([

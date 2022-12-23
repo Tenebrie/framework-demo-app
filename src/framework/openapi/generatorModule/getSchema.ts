@@ -1,6 +1,8 @@
 import {
+	ShapeOfNumberLiteral,
 	ShapeOfProperty,
 	ShapeOfRecord,
+	ShapeOfStringLiteral,
 	ShapeOfType,
 	ShapeOfUnion,
 } from '@src/framework/openapi/analyzerModule/types'
@@ -11,6 +13,8 @@ export type SchemaType =
 	| { oneOf: SchemaType[] }
 	| { type: 'array'; items: SchemaType }
 	| { type: 'object'; additionalProperties: SchemaType }
+	| { type: 'string'; enum: string[] }
+	| { type: 'number'; enum: string[] }
 
 export const getSchema = (shape: string | ShapeOfType[]): SchemaType => {
 	if (typeof shape === 'string' && shape === 'any') {
@@ -30,6 +34,24 @@ export const getSchema = (shape: string | ShapeOfType[]): SchemaType => {
 	if (shape.length === 0) {
 		return {
 			type: 'unknown_20',
+		}
+	}
+
+	const isStringLiteral = shape[0].role === 'literal_string'
+	if (isStringLiteral) {
+		const typedShape = shape[0] as ShapeOfStringLiteral
+		return {
+			type: 'string',
+			enum: [typedShape.shape]
+		}
+	}
+
+	const isNumberLiteral = shape[0].role === 'literal_number'
+	if (isNumberLiteral) {
+		const typedShape = shape[0] as ShapeOfNumberLiteral
+		return {
+			type: 'number',
+			enum: [typedShape.shape]
 		}
 	}
 

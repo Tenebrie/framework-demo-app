@@ -1,4 +1,4 @@
-import { SourceFile } from 'ts-morph'
+import { SourceFile, SyntaxKind } from 'ts-morph'
 import { parseEndpoint } from './parseEndpoint'
 import { EndpointData } from '../types'
 
@@ -28,11 +28,17 @@ export const prepareOpenApiSpec = (tsconfigPath: string, sourceFilePaths: string
 	openApiManager.initialize(endpoints)
 }
 
-export const analyzeSourceFile = (sourceFile: SourceFile): EndpointData[] => {
+export const analyzeSourceFile = (sourceFile: SourceFile, filterEndpointPaths?: string[]): EndpointData[] => {
 	const endpoints: EndpointData[] = []
 
 	sourceFile.forEachChild((node) => {
 		if (node.getText().includes('router.get') || node.getText().includes('router.post')) {
+			const endpointText = node.getFirstDescendantByKind(SyntaxKind.StringLiteral)!.getText() ?? ''
+			const endpointPath = endpointText.substring(1, endpointText.length - 1)
+			if (!!filterEndpointPaths && !filterEndpointPaths.some(path => endpointPath.includes(path))) {
+				return
+			}
+
 			const result = parseEndpoint(node)
 			endpoints.push(result)
 		}

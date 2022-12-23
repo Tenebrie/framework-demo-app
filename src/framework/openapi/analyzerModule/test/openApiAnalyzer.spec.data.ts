@@ -170,11 +170,11 @@ router.get('/test/e1bedf55-6d3a-4c01-9c66-6ec74cc66c3b', () => {
 router.get('/test/78ad5fba-f4e2-4924-b28a-23e39dd146f7', () => {
 	const random = Math.random()
 	if (random < 0.33) {
-		return 100
+		return 100 as number
 	} else if (random < 0.67) {
 		return true
 	} else {
-		return 'Hello world'
+		return 'Hello world' as string
 	}
 })
 
@@ -267,4 +267,20 @@ router.post('/test/33a0f888-396e-4c4d-b1d9-4cf6600ab88d', () => {
 
 router.post('/test/e3659429-1a05-4590-a5a6-dc80a30878e6', () => {
 	return ['foo', 'bar']
+})
+
+router.post('/test/7c51de80-1ff1-4511-b0d3-8a75c296c507', (ctx) => {
+	useRequestQuery(ctx, {
+		foo: RequiredParam<'dec' | 'hex' | 'bin'>({
+			rehydrate: (v) => v as 'dec' | 'hex' | 'bin',
+		}),
+	})
+})
+
+router.get('/test/724a56ef-32f9-4c59-b22c-60bd33e45242', (ctx) => {
+	useRequestQuery(ctx, {
+		foo: RequiredParam({
+			rehydrate: (v) => v as 'hello world',
+		}),
+	})
 })

@@ -248,4 +248,86 @@ describe('OpenApi Generator', () => {
 			},
 		})
 	})
+
+	it('generates correct spec for string literal union', () => {
+		const manager = createManager([
+			{
+				method: 'GET',
+				path: '/test/path',
+				params: [],
+				query: [],
+				objectBody: [],
+				responses: [
+					{
+						status: 200,
+						signature: [
+							{
+								role: 'union',
+								shape: [
+									{
+										role: 'union_entry',
+										shape: [{ role: 'literal_string', shape: 'dec', optional: false }],
+										optional: false,
+									},
+									{
+										role: 'union_entry',
+										shape: [{ role: 'literal_string', shape: 'hex', optional: false }],
+										optional: false,
+									},
+									{
+										role: 'union_entry',
+										shape: [{ role: 'literal_string', shape: 'bin', optional: false }],
+										optional: false,
+									},
+								],
+								optional: false,
+							},
+						],
+					},
+				],
+			},
+		])
+		const spec = generateOpenApiSpec(manager)
+
+		expect(spec.paths['/test/path'].get?.responses[200].content).toEqual({
+			'application/json': {
+				schema: {
+					oneOf: [
+						{
+							oneOf: [
+								{ type: 'string', enum: ['dec'] },
+								{ type: 'string', enum: ['hex'] },
+								{ type: 'string', enum: ['bin'] },
+							],
+						},
+					],
+				},
+			},
+		})
+	})
+
+	it('generates correct spec for stringle string literal', () => {
+		const manager = createManager([
+			{
+				method: 'GET',
+				path: '/test/path',
+				params: [],
+				query: [],
+				objectBody: [],
+				responses: [
+					{
+						status: 200,
+						signature: [{ role: 'literal_string', shape: 'hello world', optional: false }],
+					},
+				],
+			},
+		])
+		const spec = generateOpenApiSpec(manager)
+
+		console.log(JSON.stringify(spec))
+
+		expect(spec.paths['/test/path'].get?.responses[200].content).toEqual({
+			'application/json': { schema: { oneOf: [{ type: 'string', enum: ['hello world'] }] } },
+		})
+	})
 })

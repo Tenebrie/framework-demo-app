@@ -1,9 +1,28 @@
-export type ShapeOfType = ShapeOfProperty | ShapeOfUnion | ShapeOfUnionEntry | ShapeOfRecord | ShapeOfArray
+export type ShapeOfType =
+	| ShapeOfProperty
+	| ShapeOfStringLiteral
+	| ShapeOfNumberLiteral
+	| ShapeOfUnion
+	| ShapeOfUnionEntry
+	| ShapeOfRecord
+	| ShapeOfArray
 
 export type ShapeOfProperty = {
 	role: 'property'
 	identifier: string
 	shape: string | ShapeOfType[]
+	optional: boolean
+}
+
+export type ShapeOfStringLiteral = {
+	role: 'literal_string'
+	shape: string
+	optional: boolean
+}
+
+export type ShapeOfNumberLiteral = {
+	role: 'literal_number'
+	shape: string
 	optional: boolean
 }
 
