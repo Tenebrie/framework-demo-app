@@ -8,7 +8,7 @@ import {
 	UnauthorizedError,
 	useApiEndpoint,
 	useRequestBody,
-} from '@src/framework'
+} from 'tenebrie-framework'
 
 const router = new Router()
 

@@ -2,7 +2,7 @@ import 'module-alias/register'
 import Koa from 'koa'
 import { AuthRouter } from './routers/AuthRouter'
 import * as bodyParser from 'koa-bodyparser'
-import { HttpErrorHandler, initOpenApiEngine, useApiHeader } from './framework'
+import { HttpErrorHandler, initOpenApiEngine, useApiHeader } from 'tenebrie-framework'
 import { SandboxRouter } from './routers/SandboxRouter'
 
 const app = new Koa()

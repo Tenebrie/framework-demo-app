@@ -1,4 +1,4 @@
-import { Router } from '../framework'
+import { Router } from 'tenebrie-framework'
 
 const router = new Router()
 
