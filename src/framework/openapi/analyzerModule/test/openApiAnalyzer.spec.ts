@@ -40,8 +40,8 @@ describe('OpenApi Analyzer', () => {
 			})
 		})
 
-		describe('useRequestParams', () => {
-			it('parses inline useRequestParams validators correctly', () => {
+		describe('usePathParams', () => {
+			it('parses inline usePathParams validators correctly', () => {
 				const endpoint = analyzeEndpointById('bf6147f2-a1dc-4cc2-8327-e6f041f828bf')
 
 				expect(endpoint.params[0].identifier).toEqual('firstParam')
@@ -55,7 +55,7 @@ describe('OpenApi Analyzer', () => {
 				expect(endpoint.params[2].optional).toEqual(true)
 			})
 
-			it('parses built-in useRequestParams validators correctly', () => {
+			it('parses built-in usePathParams validators correctly', () => {
 				const endpoint = analyzeEndpointById('ef25ef5e-0f8f-4732-bf59-8825f94a5287')
 
 				expect(endpoint.params[0].identifier).toEqual('firstParam')
@@ -69,7 +69,7 @@ describe('OpenApi Analyzer', () => {
 				expect(endpoint.params[2].optional).toEqual(true)
 			})
 
-			it('parses complex useRequestParams validator correctly', () => {
+			it('parses complex usePathParams validator correctly', () => {
 				const endpoint = analyzeEndpointById('5ab5dd0d-b241-4378-bea1-a2dd696d699a')
 
 				expect(endpoint.params[0].identifier).toEqual('firstParam')
@@ -106,7 +106,7 @@ describe('OpenApi Analyzer', () => {
 				expect(endpoint.params[1].optional).toEqual(false)
 			})
 
-			it('parses useRequestParams validator with optional types correctly', () => {
+			it('parses usePathParams validator with optional types correctly', () => {
 				const endpoint = analyzeEndpointById('209df2a1-55f9-4859-bc31-3277547c7d88')
 
 				expect(endpoint.params[0].identifier).toEqual('firstParam')
@@ -131,7 +131,7 @@ describe('OpenApi Analyzer', () => {
 				expect(endpoint.params[1].optional).toEqual(false)
 			})
 
-			it('parses useRequestParams validator with union types correctly', () => {
+			it('parses usePathParams validator with union types correctly', () => {
 				const endpoint = analyzeEndpointById('89d961f1-7d36-4271-8bd3-665ee0992590')
 
 				expect(endpoint.params[0].identifier).toEqual('firstParam')
@@ -197,8 +197,8 @@ describe('OpenApi Analyzer', () => {
 			})
 		})
 
-		describe('useRequestQuery', () => {
-			it('parses inline useRequestQuery validators correctly', () => {
+		describe('useQueryParams', () => {
+			it('parses inline useQueryParams validators correctly', () => {
 				const endpoint = analyzeEndpointById('f89310d9-25ac-4005-93e4-614179d3bbd4')
 
 				expect(endpoint.query[0].identifier).toEqual('firstParam')
@@ -336,41 +336,9 @@ describe('OpenApi Analyzer', () => {
 			})
 		})
 
-		describe('useRequestObjectBody', () => {
-			it('parses inline useRequestObjectBody validators correctly', () => {
+		describe('useRequestBody', () => {
+			it('parses inline useRequestBody validators correctly', () => {
 				const endpoint = analyzeEndpointById('e8e5496b-11a0-41e3-a68d-f03d524e413c')
-
-				expect(endpoint.objectBody[0].identifier).toEqual('firstParam')
-				expect(endpoint.objectBody[0].signature).toEqual('string')
-				expect(endpoint.objectBody[0].optional).toEqual(false)
-				expect(endpoint.objectBody[1].identifier).toEqual('secondParam')
-				expect(endpoint.objectBody[1].signature).toEqual('boolean')
-				expect(endpoint.objectBody[1].optional).toEqual(true)
-				expect(endpoint.objectBody[2].identifier).toEqual('thirdParam')
-				expect(endpoint.objectBody[2].signature).toEqual('number')
-				expect(endpoint.objectBody[2].optional).toEqual(true)
-			})
-		})
-
-		describe('useRequestJsonBody', () => {
-			it('parses inline useRequestJsonBody validators correctly', () => {
-				const endpoint = analyzeEndpointById('7268be93-ce90-44b1-9a2f-8b286d7aae67')
-
-				expect(endpoint.objectBody[0].identifier).toEqual('firstParam')
-				expect(endpoint.objectBody[0].signature).toEqual('string')
-				expect(endpoint.objectBody[0].optional).toEqual(false)
-				expect(endpoint.objectBody[1].identifier).toEqual('secondParam')
-				expect(endpoint.objectBody[1].signature).toEqual('boolean')
-				expect(endpoint.objectBody[1].optional).toEqual(true)
-				expect(endpoint.objectBody[2].identifier).toEqual('thirdParam')
-				expect(endpoint.objectBody[2].signature).toEqual('number')
-				expect(endpoint.objectBody[2].optional).toEqual(true)
-			})
-		})
-
-		describe('useRequestFormBody', () => {
-			it('parses inline useRequestFormBody validators correctly', () => {
-				const endpoint = analyzeEndpointById('185c6075-a0f4-4607-af81-b51923f5866f')
 
 				expect(endpoint.objectBody[0].identifier).toEqual('firstParam')
 				expect(endpoint.objectBody[0].signature).toEqual('string')

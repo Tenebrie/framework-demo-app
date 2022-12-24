@@ -30,7 +30,7 @@ type CleanUpPathParam<S> = S extends string
 		: ''
 	: never
 
-export const useRequestParams = <
+export const usePathParams = <
 	ParamsT extends string[],
 	TestTemplate extends {
 		[K in keyof ParamsT]: {

@@ -7,6 +7,18 @@ type CheckIfOptional<T, B extends boolean | undefined> = B extends false ? T : T
 
 type ValidatedData<T extends Validator<any>> = CheckIfOptional<ReturnType<T['rehydrate']>, T['optional']>
 
+/**
+ * Hook to access request body data without parsing into an object.
+ *
+ * Supported content types:
+ * - `text/plain`
+ * - `application/json`
+ * - `application/x-www-form-urlencoded`
+ *
+ * @param ctx Koa context
+ * @param validators Validator definitions
+ * @returns Validated parameters
+ */
 export const useRequestRawBody = <ValidatorT extends Validator<any>>(
 	ctx: ParameterizedContext,
 	validator: ValidatorT

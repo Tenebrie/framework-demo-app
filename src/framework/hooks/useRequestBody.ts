@@ -9,7 +9,18 @@ type ValidatedData<T extends Record<string, Validator<any>>> = {
 	[K in keyof T]: CheckIfOptional<ReturnType<T[K]['rehydrate']>, T[K]['optional']>
 }
 
-export const useRequestObjectBody = <ValidatorsT extends Record<string, Validator<any>>>(
+/**
+ * Hook to access request body data in JSON or form formats.
+ *
+ * Supported content types:
+ * - `application/json`
+ * - `application/x-www-form-urlencoded`
+ *
+ * @param ctx Koa context
+ * @param validators Validator definitions
+ * @returns Validated parameters
+ */
+export const useRequestBody = <ValidatorsT extends Record<string, Validator<any>>>(
 	ctx: ParameterizedContext,
 	validators: ValidatorsT
 ): ValidatedData<ValidatorsT> => {
@@ -65,6 +76,3 @@ export const useRequestObjectBody = <ValidatorsT extends Record<string, Validato
 
 	return returnValue as ValidatedData<ValidatorsT>
 }
-
-export const useRequestJsonBody = useRequestObjectBody
-export const useRequestFormBody = useRequestObjectBody

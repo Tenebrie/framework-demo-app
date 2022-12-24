@@ -324,8 +324,6 @@ describe('OpenApi Generator', () => {
 		])
 		const spec = generateOpenApiSpec(manager)
 
-		console.log(JSON.stringify(spec))
-
 		expect(spec.paths['/test/path'].get?.responses[200].content).toEqual({
 			'application/json': { schema: { oneOf: [{ type: 'string', enum: ['hello world'] }] } },
 		})

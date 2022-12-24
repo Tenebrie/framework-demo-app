@@ -56,7 +56,7 @@ export const parseEndpoint = (node: Node<ts.Node>) => {
 
 	// Request query
 	try {
-		endpointData.query = parseRequestObjectInput(node, 'useRequestQuery')
+		endpointData.query = parseRequestObjectInput(node, 'useQueryParams')
 	} catch (err) {
 		warningData.push((err as Error).message)
 		console.error('Error', err)
@@ -75,11 +75,7 @@ export const parseEndpoint = (node: Node<ts.Node>) => {
 
 	// Object request body
 	try {
-		endpointData.objectBody = [
-			parseRequestObjectInput(node, 'useRequestObjectBody'),
-			parseRequestObjectInput(node, 'useRequestJsonBody'),
-			parseRequestObjectInput(node, 'useRequestFormBody'),
-		].flat()
+		endpointData.objectBody = parseRequestObjectInput(node, 'useRequestBody')
 	} catch (err) {
 		warningData.push((err as Error).message)
 		console.error('Error', err)
@@ -97,14 +93,7 @@ export const parseEndpoint = (node: Node<ts.Node>) => {
 
 const getHookNode = (
 	endpointNode: Node<ts.Node>,
-	hookName:
-		| 'useApiEndpoint'
-		| 'useRequestParams'
-		| 'useRequestQuery'
-		| 'useRequestObjectBody'
-		| 'useRequestJsonBody'
-		| 'useRequestFormBody'
-		| 'useRequestRawBody'
+	hookName: 'useApiEndpoint' | 'usePathParams' | 'useQueryParams' | 'useRequestBody' | 'useRequestRawBody'
 ) => {
 	const callExpressions = endpointNode.getDescendantsOfKind(SyntaxKind.CallExpression)
 	const matchingCallExpressions = callExpressions.filter((node) => {
@@ -130,7 +119,7 @@ const parseApiDocumentation = (node: Node<ts.Node>) => {
 }
 
 const parseRequestParams = (node: Node<ts.Node>, endpointPath: string): EndpointData['params'] => {
-	const hookNode = getHookNode(node, 'useRequestParams')
+	const hookNode = getHookNode(node, 'usePathParams')
 	if (!hookNode) {
 		return []
 	}
@@ -139,7 +128,7 @@ const parseRequestParams = (node: Node<ts.Node>, endpointPath: string): Endpoint
 	const valueNode = findNodeImplementation(paramNode.getLastChild()!)
 
 	if (!valueNode.isKind(SyntaxKind.ObjectLiteralExpression)) {
-		throw new Error('Non-literal type used in useRequestParams')
+		throw new Error('Non-literal type used in usePathParams')
 	}
 
 	const declaredParams = endpointPath
@@ -176,7 +165,7 @@ const parseRequestRawBody = (node: Node<ts.Node>): NonNullable<EndpointData['raw
 
 const parseRequestObjectInput = (
 	node: Node<ts.Node>,
-	nodeName: 'useRequestQuery' | 'useRequestObjectBody' | 'useRequestJsonBody' | 'useRequestFormBody'
+	nodeName: 'useQueryParams' | 'useRequestBody'
 ): EndpointData['query'] | EndpointData['objectBody'] => {
 	const hookNode = getHookNode(node, nodeName)
 	if (!hookNode) {

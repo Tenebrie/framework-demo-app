@@ -9,7 +9,7 @@ type ValidatedData<T extends Record<string, Validator<any>>> = {
 	[K in keyof T]: CheckIfOptional<ReturnType<T[K]['rehydrate']>, T[K]['optional']>
 }
 
-export const useRequestQuery = <ValidatorsT extends Record<string, Validator<any>>>(
+export const useQueryParams = <ValidatorsT extends Record<string, Validator<any>>>(
 	ctx: ParameterizedContext,
 	validators: ValidatorsT
 ): ValidatedData<ValidatorsT> => {

@@ -46,11 +46,10 @@ As of right now, the unnamed framework lives in `src/framework` folder, but will
 > This section is work-in-progress.
 
 ```ts
-const params = useRequestParams(ctx, {...})
-const query = useRequestQuery(ctx, {...})
+const params = usePathParams(ctx, {...})
+const query = useQueryParams(ctx, {...})
+const body = useRequestBody(ctx, {...})
 const rawBody = useRequestRawBody(ctx, {...})
-const jsonBody = useRequestJsonBody(ctx, {...})
-const formBody = useRequestFormBody(ctx, {...})
 ```
 
 # Validators
@@ -61,7 +60,7 @@ Validators are run for every parameter received from the client.
 **Example:**
 
 ```ts
-const query = useRequestQuery(ctx, {
+const query = useQueryParams(ctx, {
     name: RequiredParam(StringValidator),
     fooBar: OptionalParam<{ foo: string; bar: string }>({
         rehydrate: (v) => JSON.parse(v),
@@ -78,7 +77,7 @@ query.fooBar // type is '{ foo: string; bar: string }'
 The most common validators are available out-of-the-box.
 
 ```ts
-const query = useRequestQuery(ctx, {
+const query = useQueryParams(ctx, {
     myNumber: NumberValidator,
     myString: StringValidator,
     myBoolean: BooleanValidator,
@@ -91,7 +90,7 @@ query.myBoolean // type is 'boolean'
 
 ## Required and optional parameters
 ```ts
-const query = useRequestQuery(ctx, {
+const query = useQueryParams(ctx, {
     predefinedBool: BooleanValidator,
     optionalBool: OptionalParam(BooleanValidator),
     customBool: RequiredParam({
@@ -117,7 +116,7 @@ Custom validators are simple objects that can be defined either inline, or elsew
 ### Inline
 
 ```ts
-const query = useRequestQuery(ctx, {
+const query = useQueryParams(ctx, {
     numberInRange: RequiredParam({
         rehydrate: (v) => Number(v),
         validate: (v) => !isNaN(v) && v >= 0 && v <= 100,
@@ -166,7 +165,7 @@ In many cases, type of the parameter can be inferred from the return value of `r
 
 
 ```ts
-useRequestQuery(ctx, {
+useQueryParams(ctx, {
     fooBar: RequiredParam({
         prevalidate: (v) => v.length > 5,
         rehydrate: (v) => JSON.parse(v) as { foo: string; bar: string },
@@ -178,7 +177,7 @@ useRequestQuery(ctx, {
 Alternatively, the expected type can be mentioned in `RequiredParam`, `OptionalParam` or `PathParam` generics:
 
 ```ts
-useRequestQuery(ctx, {
+useQueryParams(ctx, {
     fooBar: RequiredParam<{ foo: string; bar: string }>({
         prevalidate: (v) => v.length > 5,
         rehydrate: (v) => JSON.parse(v),
@@ -192,7 +191,7 @@ useRequestQuery(ctx, {
 While the following is valid code, the type of the parameter can't be inferred as TS will not parse this as Validator type. The type of `validate` will be `(v: any) => boolean`, which is unsafe.
 
 ```ts
-useRequestQuery(ctx, {
+useQueryParams(ctx, {
     myParam: {
         rehydrate: (v) => Number(v),
         validate: (v) => v > 0,
@@ -207,7 +206,7 @@ Path params have extra binding to the endpoint path. Only the properties mention
 
 ```ts
 router.get('/user/:userId', (ctx) => {
-	const params = useRequestParams(ctx, {
+	const params = usePathParams(ctx, {
 		userId: StringValidator,   // valid
         username: StringValidator, // 'username' is not a path param
 	})
@@ -222,7 +221,7 @@ Following standard Koa way of defining an optional param, a param marked by a qu
 
 ```ts
 router.get('/user/:userId?', (ctx) => {
-	const params = useRequestParams(ctx, {
+	const params = usePathParams(ctx, {
 		userId: StringValidator,
 	})
 
@@ -236,7 +235,7 @@ As parameter optionaliy is defined in a path, `RequiredParam` and `OptionalParam
 
 ```ts
 router.get('/user/:numberId', (ctx) => {
-	useRequestParams(ctx, {
+	usePathParams(ctx, {
 		numberId: PathParam({
             rehydrate: (v) => Number(v),
             validate: (v) => !isNaN(v) && v >= 0 && v <= 100,

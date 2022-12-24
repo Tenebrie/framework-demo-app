@@ -7,7 +7,7 @@ import {
 	Router,
 	UnauthorizedError,
 	useApiEndpoint,
-	useRequestJsonBody,
+	useRequestBody,
 } from '@src/framework'
 
 const router = new Router()
@@ -19,7 +19,7 @@ router.post('/auth', (ctx) => {
 		description: 'Creates a new user account with provided credentials',
 	})
 
-	const body = useRequestJsonBody(ctx, {
+	const body = useRequestBody(ctx, {
 		email: EmailString,
 		username: NonEmptyString,
 		password: NonEmptyString,
@@ -45,7 +45,7 @@ router.post('/auth/login', (ctx) => {
 		description: 'Exchanges user credentials for a JWT token',
 	})
 
-	const body = useRequestJsonBody(ctx, {
+	const body = useRequestBody(ctx, {
 		email: EmailString,
 		password: NonEmptyString,
 	})
