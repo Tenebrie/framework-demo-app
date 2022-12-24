@@ -27,6 +27,7 @@ As of right now, the unnamed framework lives in `src/framework` folder, but will
 
 ## Planned features
 
+- Support for exporting named models
 - Proper support for router-level middleware
 - `useAuthentication` hook for native auth
 - `useCookies` hook to work with cookies
