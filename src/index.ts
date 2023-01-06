@@ -1,8 +1,11 @@
 import 'module-alias/register'
+
 import Koa from 'koa'
-import { AuthRouter } from './routers/AuthRouter'
 import * as bodyParser from 'koa-bodyparser'
 import { HttpErrorHandler, initOpenApiEngine, useApiHeader } from 'tenebrie-framework'
+
+import { AuthRouter } from './routers/AuthRouter'
+import { ExamplesRouter } from './routers/ExamplesRouter'
 import { SandboxRouter } from './routers/SandboxRouter'
 
 const app = new Koa()
@@ -32,12 +35,18 @@ app
 	)
 	.use(AuthRouter.routes())
 	.use(AuthRouter.allowedMethods())
+	.use(ExamplesRouter.routes())
+	.use(ExamplesRouter.allowedMethods())
 	.use(SandboxRouter.routes())
 	.use(SandboxRouter.allowedMethods())
 	.use(
 		initOpenApiEngine({
 			tsconfigPath: './tsconfig.json',
-			sourceFilePaths: ['./src/routers/AuthRouter.ts', './src/routers/SandboxRouter.ts'],
+			sourceFilePaths: [
+				'./src/routers/AuthRouter.ts',
+				'./src/routers/ExamplesRouter.ts',
+				'./src/routers/SandboxRouter.ts',
+			],
 		})
 	)
 
