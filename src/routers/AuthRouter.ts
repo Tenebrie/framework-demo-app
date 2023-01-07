@@ -1,7 +1,7 @@
 import {
 	BadRequestError,
 	EmailString,
-	NonEmptyString,
+	NonEmptyStringValidator,
 	Router,
 	UnauthorizedError,
 	useApiEndpoint,
@@ -22,8 +22,8 @@ router.post('/auth', (ctx) => {
 
 	const body = useRequestBody(ctx, {
 		email: EmailString,
-		username: NonEmptyString,
-		password: NonEmptyString,
+		username: NonEmptyStringValidator,
+		password: NonEmptyStringValidator,
 	})
 
 	const existingUser = UserService.findByEmail(body.email)
@@ -48,7 +48,7 @@ router.post('/auth/login', (ctx) => {
 
 	const body = useRequestBody(ctx, {
 		email: EmailString,
-		password: NonEmptyString,
+		password: NonEmptyStringValidator,
 	})
 
 	const user = UserService.login(body.email, body.password)

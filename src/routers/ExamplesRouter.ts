@@ -7,6 +7,8 @@ router.get('/examples/headers', (ctx) => {
 		'x-basic-authentication': RequiredParam<{ username: string; password: string }>({
 			rehydrate: (v) => JSON.parse(v),
 			validate: (v) => (v.username?.length ?? 0) > 0 && (v.password?.length ?? 0) > 0,
+			description: "Basic authentication header, includes 'username' and 'password'.",
+			errorMessage: "Must provide 'username' and 'password'.",
 		}),
 	})
 
