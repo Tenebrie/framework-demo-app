@@ -20,7 +20,7 @@
 		"koa": "^2.13.0",
 		"koa-bodyparser": "^4.3.0",
 		"nodemon": "^2.0.20",
-		"tenebrie-framework": "0.4.0",
+		"tenebrie-framework": "0.4.3",
 		"ts-morph": "^16.0.0"
 	},
 	"devDependencies": {

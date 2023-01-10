@@ -1,6 +1,6 @@
 import {
 	BadRequestError,
-	EmailString,
+	EmailValidator,
 	NonEmptyStringValidator,
 	Router,
 	UnauthorizedError,
@@ -21,7 +21,7 @@ router.post('/auth', (ctx) => {
 	})
 
 	const body = useRequestBody(ctx, {
-		email: EmailString,
+		email: EmailValidator,
 		username: NonEmptyStringValidator,
 		password: NonEmptyStringValidator,
 	})
@@ -47,7 +47,7 @@ router.post('/auth/login', (ctx) => {
 	})
 
 	const body = useRequestBody(ctx, {
-		email: EmailString,
+		email: EmailValidator,
 		password: NonEmptyStringValidator,
 	})
 
