@@ -42,11 +42,6 @@ app
 	.use(
 		initOpenApiEngine({
 			tsconfigPath: './tsconfig.json',
-			sourceFilePaths: [
-				'./src/routers/AuthRouter.ts',
-				'./src/routers/ExamplesRouter.ts',
-				'./src/routers/SandboxRouter.ts',
-			],
 		})
 	)
 
