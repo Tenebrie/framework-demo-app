@@ -1,5 +1,8 @@
 # Moonflower example app
-> This section is work-in-progress.
+
+This simple application demonstrates a few different ways to use Moonflower, a type-safe Node backend framework.
+
+See https://github.com/Tenebrie/Moonflower for Moonflower documentation.
 
 ## Exploration guide
 
@@ -10,5 +13,3 @@
 - Send requests to `localhost:3000/{yourPath}` to see the responses.
 - Visit `localhost:3000/api-json` to get an OpenAPI spec of your API.
 - To add new routers, do not forget to register them in `src/index.ts`.
-
-See https://github.com/Tenebrie/Moonflower for Moonflower documentation.
