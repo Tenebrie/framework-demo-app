@@ -1,8 +1,6 @@
 # Moonflower example app
 > This section is work-in-progress.
 
-The framework is not finished, but this app demonstrates the core features that will be available.
-
 ## Exploration guide
 
 - After pulling the repo, use `yarn` to install dependencies.
@@ -13,7 +11,4 @@ The framework is not finished, but this app demonstrates the core features that 
 - Visit `localhost:3000/api-json` to get an OpenAPI spec of your API.
 - To add new routers, do not forget to register them in `src/index.ts`.
 
-# Framework documentation
-> This section is work-in-progress.
-
-See https://github.com/Tenebrie/Moonflower for documentation.
+See https://github.com/Tenebrie/Moonflower for Moonflower documentation.

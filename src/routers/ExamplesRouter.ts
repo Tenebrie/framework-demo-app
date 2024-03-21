@@ -13,7 +13,7 @@ const router = new Router()
 router.get('/examples/headers', (ctx) => {
 	const headers = useHeaderParams(ctx, {
 		'x-basic-authentication': RequiredParam<{ username: string; password: string }>({
-			rehydrate: (v) => JSON.parse(v ?? ''),
+			parse: (v) => JSON.parse(v ?? ''),
 			validate: (v) => (v.username?.length ?? 0) > 0 && (v.password?.length ?? 0) > 0,
 			description: "Basic authentication header, includes 'username' and 'password'.",
 			errorMessage: "Must provide 'username' and 'password'.",
@@ -39,7 +39,7 @@ router.get('/examples/convertNumber', (ctx) => {
 	const query = useQueryParams(ctx, {
 		value: NumberValidator,
 		base: RequiredParam<NumberBase>({
-			rehydrate: (v) => v as NumberBase,
+			parse: (v) => v as NumberBase,
 			validate: (v) => v === 'bin' || v === 'dec' || v === 'hex',
 			description: "'bin', 'dec' or 'hex'",
 		}),

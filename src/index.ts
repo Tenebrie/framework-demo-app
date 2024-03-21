@@ -11,7 +11,7 @@ import { SandboxRouter } from './routers/SandboxRouter'
 const app = new Koa()
 
 useApiHeader({
-	title: 'Framework Demo App',
+	title: 'Moonflower Example App',
 	description: 'This is a description field',
 	termsOfService: 'https://example.com',
 	contact: {
