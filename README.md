@@ -1,4 +1,4 @@
-# Demo-app documentation
+# Moonflower example app
 > This section is work-in-progress.
 
 The framework is not finished, but this app demonstrates the core features that will be available.
@@ -16,4 +16,4 @@ The framework is not finished, but this app demonstrates the core features that 
 # Framework documentation
 > This section is work-in-progress.
 
-See https://github.com/Tenebrie/tenebrie-framework for documentation.
+See https://github.com/Tenebrie/Moonflower for documentation.

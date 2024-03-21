@@ -6,7 +6,7 @@ import {
 	UnauthorizedError,
 	useApiEndpoint,
 	useRequestBody,
-} from 'tenebrie-framework'
+} from 'moonflower'
 
 import { TokenService } from '../services/TokenService'
 import { UserService } from '../services/UserService'
